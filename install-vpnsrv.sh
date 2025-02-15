@@ -82,4 +82,7 @@ sudo docker run -d --restart=unless-stopped -p 9176:9176 \
   -v /path/to/openvpn_server.status:/etc/openvpn_exporter/server.status \
   kumina/openvpn-exporter -openvpn.status_paths /etc/openvpn_exporter/server.status
 
-sudo apt install prometheus-node-exporter  
+sudo apt install prometheus-node-exporter -y
+
+sudo iptables -A INPUT -p tcp --dport 9100 -s 89.169.154.113 -j ACCEPT
+sudo service netfilter-persistent save
