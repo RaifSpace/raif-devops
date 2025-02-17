@@ -1,15 +1,13 @@
 #!/bin/bash
 set -e
 
-#sudo timedatectl set-ntp true
-#systemctl unmask systemd-timesyncd.service
-#sudo systemctl start systemd-timesyncd
-#sudo systemctl enable systemd-timesyncd
-#sudo systemctl status systemd-timesyncd
-sudo apt-get update && sudo apt-get install ntpdate ntp -y
-sudo /etc/init.d/ntp stop
-sudo ntpdate pool.ntp.org
-sudo /etc/init.d/ntp start
+sudo timedatectl set-timezone Europe/Moscow
+sudo systemctl restart systemd-timesyncd.service && timedatectl
+
+#sudo apt-get update && sudo apt-get install ntpdate ntp -y
+#sudo /etc/init.d/ntp stop
+#sudo ntpdate pool.ntp.org
+#sudo /etc/init.d/ntp start
 
 wget https://github.com/RaifSpace/raif-devops/releases/download/v0.1.1/easy-rsa-vars_0.1-1_all.deb
 
