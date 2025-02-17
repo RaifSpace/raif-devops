@@ -1,0 +1,151 @@
+1. Базовые системные метрики для всех машин (через node_exporter):
+
+PromQL-запросы:
+
+# Загрузка CPU (больше 80%)
+100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+
+# Доступная память (менее 10%)
+(node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100) < 10
+
+# Свободное место на диске (менее 15%)
+(node_filesystem_avail_bytes{mountpoint="/", fstype!="tmpfs"} / node_filesystem_size_bytes{mountpoint="/"} * 100) < 15
+
+# Сервис недоступен
+up{job=~"ca|openvpn"} == 0
+
+Алерты:
+
+- alert: HighCpuUsage
+  expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+  for: 5m
+  labels:
+    severity: warning
+  annotations:
+    summary: "High CPU usage on {{ $labels.instance }}"
+
+- alert: LowMemory
+  expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100) < 10
+  for: 10m
+  labels:
+    severity: warning
+  annotations:
+    summary: "Low memory on {{ $labels.instance }}"
+
+- alert: DiskSpaceCritical
+  expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100) < 15
+  labels:
+    severity: critical
+  annotations:
+    summary: "Disk space critical on {{ $labels.instance }}"
+
+- alert: ServiceDown
+  expr: up{job=~"easyrsa|openvpn"} == 0
+  for: 2m
+  labels:
+    severity: critical
+  annotations:
+    summary: "Service {{ $labels.job }} is down on {{ $labels.instance }}"
+
+2. Метрики для Easy-RSA - удостоверяющий центр (ca) (через ssl-exporter):
+
+PromQL-запросы:
+
+# Срок действия CA-сертификата истекает менее чем через 30 дней
+easyrsa_cert_expiry_seconds{cert_type="ca"} < 30 * 86400
+
+# Срок действия серверного сертификата истекает менее чем через 7 дней
+easyrsa_cert_expiry_seconds{cert_type="server"} < 7 * 86400
+
+Алерты:
+
+- alert: RootCertExpiry
+  expr: easyrsa_cert_expiry_seconds{cert_type="ca"} < 30 * 86400
+  labels:
+    severity: critical
+  annotations:
+    summary: "CA certificate expires in {{ $value | humanizeDuration }}"
+
+- alert: ServerCertExpiry
+  expr: easyrsa_cert_expiry_seconds{cert_type="server"} < 7 * 86400
+  labels:
+    severity: critical
+  annotations:
+    summary: "Server certificate expires in {{ $value | humanizeDuration }}"
+
+3. Метрики для сервера OpenVPN (через kumina/openvpn-exporter):
+
+PromQL-запросы:
+
+# Сервис OpenVPN неактивен более 5 минут
+node_systemd_unit_state{name="openvpn.service", state="active"} != 1
+
+# Нет подключенных клиентов более 10 минут
+openvpn_status_client_count == 0
+
+# Высокая нагрузка на сервере
+node_load5 > 3
+
+# Мало памяти
+(node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100 < 10
+
+# Мало места на диске
+(node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 < 20
+
+# Отсутствие исходящего трафика (возможно, обрыв)
+rate(openvpn_traffic_out_bytes[15m]) == 0
+
+Алерты:
+
+- alert: OpenVPNServiceDown
+    expr: node_systemd_unit_state{name="openvpn.service", state="active"} != 1
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "OpenVPN не работает ({{ $labels.instance }})"
+      description: "Сервис OpenVPN неактивен более 5 минут."
+
+  - alert: NoOpenVPNClients
+    expr: openvpn_status_client_count == 0
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Нет клиентов OpenVPN ({{ $labels.instance }})"
+      description: "Нет подключенных клиентов более 10 минут."
+
+  - alert: HighLoadOnVPNServer
+    expr: node_load5 > 3
+    for: 15m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Высокая нагрузка на сервере ({{ $labels.instance }})"
+      description: "Нагрузка (5 мин): {{ $value | printf \"%.2f\" }}."
+
+  - alert: LowMemoryOnServer
+    expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100 < 10
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Мало памяти ({{ $labels.instance }})"
+      description: "Доступно {{ $value | humanizePercentage }} памяти."
+
+  - alert: DiskSpaceLow
+    expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 < 20
+    for: 1h
+    labels:
+      severity: warning
+    annotations:
+      summary: "Мало места на диске ({{ $labels.instance }})"
+      description: "Свободно {{ $value | humanizePercentage }} места."
+
+- alert: OpenVpnTrafficStalled
+  expr: rate(openvpn_traffic_out_bytes[15m]) == 0
+  labels:
+    severity: critical
+  annotations:
+    summary: "No outgoing OpenVPN traffic for 15 minutes"
+
