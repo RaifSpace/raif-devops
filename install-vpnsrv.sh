@@ -1,16 +1,8 @@
 #!/bin/bash
 set -e
 
-sudo timedatectl set-ntp true || exit 1
-sudo systemctl restart systemd-timesyncd
-sudo systemctl enable systemd-timesyncd
-sudo systemctl status systemd-timesyncd
-#sudo apt-get update
-#sudo apt-get install ntpdate
-#sudo apt-get install -y ntp
-#sudo /etc/init.d/ntp stop
-#sudo ntpdate pool.ntp.org
-#sudo /etc/init.d/ntp start
+sudo timedatectl set-timezone Europe/Moscow
+sudo systemctl restart systemd-timesyncd.service && timedatectl
 
 sudo apt update && sudo apt install openvpn easy-rsa -y
 mkdir -p ~/easy-rsa
