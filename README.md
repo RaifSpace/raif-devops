@@ -3,6 +3,7 @@
 Создать снимок диска - https://yandex.cloud/ru/docs/compute/operations/disk-control/create-snapshot#cli_1
 
 Поскольку данные на серверах конфиденциальны, использовал инструмент с поддержкой шифрования "из коробки" Restic (https://restic.net/)
+
 Доводы:
 https://computingforgeeks.com/top-10-free-backup-software-for-linux/
 
