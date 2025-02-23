@@ -40,7 +40,7 @@ up{job=~"ca|openvpn"} == 0
     summary: "Disk space critical on {{ $labels.instance }}"
 
 - alert: ServiceDown
-  expr: up{job=~"easyrsa|openvpn"} == 0
+  expr: up{job=~"ca|openvpn"} == 0
   for: 2m
   labels:
     severity: critical
