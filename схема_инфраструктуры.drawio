@@ -137,6 +137,12 @@
         <mxCell id="vOUV476OKw6NWkuYk_WK-27" value="&lt;font style=&quot;font-size: 24px; color: rgb(153, 76, 0);&quot;&gt;&lt;b style=&quot;&quot;&gt;metrics&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
           <mxGeometry x="822" y="311" width="110" height="40" as="geometry" />
         </mxCell>
+        <mxCell id="vOUV476OKw6NWkuYk_WK-28" value="&lt;font style=&quot;font-size: 24px;&quot;&gt;&lt;b&gt;req&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="933.75" y="648" width="60" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="vOUV476OKw6NWkuYk_WK-29" value="&lt;font style=&quot;font-size: 24px;&quot;&gt;&lt;b&gt;crt&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="772" y="545" width="50" height="40" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
