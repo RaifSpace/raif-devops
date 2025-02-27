@@ -6,6 +6,7 @@
 
 Упрощенный вариант разворачивания OpenVPN-сервера:
 https://openvpn.net/product-select/
+
 To install Access Server on your Linux server, run this command as root:
 ```
 bash <(curl -fsS https://packages.openvpn.net/as/install.sh) --yes
