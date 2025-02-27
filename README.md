@@ -1,8 +1,8 @@
 Скрипты для автоматизации:
-  - CA Server: install-ca.sh
-  - OpenVPN Server: install-vpnsrv.sh
-  - Prometheus Server: install-promsrv.sh
-  - Backup Server: backup.sh
+  - CA Server: `install-ca.sh`
+  - OpenVPN Server: `install-vpnsrv.sh`
+  - Prometheus Server: `install-promsrv.sh`
+  - Backup Server: `backup.sh`
 
 Упрощенный вариант разворачивания OpenVPN-сервера:
 https://openvpn.net/product-select/
@@ -12,7 +12,7 @@ To install Access Server on your Linux server, run this command as root:
 bash <(curl -fsS https://packages.openvpn.net/as/install.sh) --yes
 ```
 
-Веб-интерфейс Prometheus - `https://raif.hopto.org/`
+Веб-интерфейс Prometheus - https://raif.hopto.org/
 
 Поскольку данные на серверах конфиденциальны, для бэкапирования используется инструмент с поддержкой шифрования из коробки - Restic - https://restic.net/
 
